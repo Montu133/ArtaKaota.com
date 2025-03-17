@@ -3,122 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cek Kuota ARTA XL CIRCLE</title>
+    <title>Website Maintenance</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #121212; color: white; text-align: center; }
-        
-        .loading-screen { position: fixed; width: 100%; height: 100%; background: #1e1e1e; display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 9999; }
-        .loading-text { font-size: 24px; font-weight: bold; margin-bottom: 20px; }
-        .loading-bar { width: 60%; height: 8px; background: #333; border-radius: 4px; overflow: hidden; position: relative; }
-        .loading-progress { width: 0%; height: 100%; background: #00ff99; transition: width 0.2s ease-in-out; }
-        
-        .input-container { display: none; padding: 30px; background: rgba(0, 0, 0, 0.8); border-radius: 10px; width: 40%; margin: auto; margin-top: 15vh; box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2); }
-        input { padding: 12px; font-size: 18px; width: 80%; margin: 10px; border-radius: 5px; border: none; text-align: center; }
-        button { padding: 12px 25px; font-size: 18px; cursor: pointer; background: #00ff99; color: black; border: none; border-radius: 5px; transition: 0.3s; }
-        button:hover { background: #00cc77; }
-        
-        .kuota-container { display: none; padding: 20px; background: rgba(0, 0, 0, 0.85); border-radius: 10px; width: 90%; margin: auto; margin-top: 5vh; text-align: center; box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3); }
-        .member { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #222; margin: 10px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 255, 153, 0.3); }
-        .circle { width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 14px; font-weight: bold; }
-        
-        .green { background: #00ff99; color: black; }
-        .yellow { background: #c5ff47; color: black; }
-        .red { background: #ff4b4b; color: white; }
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            font-size: 2rem;
+            color: #ffcc00;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        .contact {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            background: #ffcc00;
+            color: #121212;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .contact:hover {
+            background: #e6b800;
+        }
     </style>
 </head>
 <body>
-    <div class="loading-screen">
-        <div class="loading-text">Loading... <span id="loading-text">0%</span></div>
-        <div class="loading-bar"><div class="loading-progress" id="progress-bar"></div></div>
+    <div class="container">
+        <h1>Website Sedang Maintenance</h1>
+        <p>Saat ini website sedang dalam perbaikan. Mohon maaf atas ketidaknyamanannya.</p>
+        <p>Jika ingin cek kuota, silakan hubungi owner:</p>
+        <a class="contact" href="https://wa.me/yourcontact">Hubungi Arta</a>
     </div>
-    
-    <div class="input-container">
-        <h2>Masukkan Nama Anda</h2>
-        <input type="text" id="nama" placeholder="Nama Anda">
-        <button onclick="showKuotaMenu()">Masuk</button>
-    </div>
-    
-    <div class="kuota-container">
-        <h2>Menu Cek Kuota</h2>
-        <p>Website ini dibuat oleh Gede Arta dan Montu.</p>
-        <div id="kuota-list"></div>
-    </div>
-    
-    <script>
-        let progress = 0;
-        let loadingInterval = setInterval(() => {
-            progress += 2;
-            document.getElementById("loading-text").innerText = `${progress}%`;
-            document.getElementById("progress-bar").style.width = `${progress}%`;
-            if (progress >= 100) {
-                clearInterval(loadingInterval);
-                document.querySelector('.loading-screen').style.display = 'none';
-                document.querySelector('.input-container').style.display = 'block';
-            }
-        }, 50);
-        
-        let members = JSON.parse(localStorage.getItem("members")) || {
-            "Keluarga Arta": { "Bapak": 20, "Memek": 20, "Dinda": 20 },
-            "Keluarga Sri": { "Sri": 20, "Nia": 20, "Riski": 20, "Puji": 20 },
-            "Keluarga Dika Iwe": { "Dika": 20, "Iwe Dika": 20 },
-            "Werti": { "Werti": 20 },
-            "Sendi": { "Sendi": 20 },
-            "Arta (Owner)": { "Arta": "Unlimited" }
-        };
-
-        function getCircleColor(gb) {
-            if (gb === "Unlimited") return "green";
-            if (gb > 18) return "green";
-            if (gb > 15) return "yellow";
-            return "red";
-        }
-
-        function reduceQuota() {
-            let lastVisit = localStorage.getItem("lastVisit");
-            let now = new Date().getTime();
-            
-            if (!lastVisit || (now - lastVisit) > 86400000) {
-                for (let keluarga in members) {
-                    for (let nama in members[keluarga]) {
-                        if (members[keluarga][nama] !== "Unlimited") {
-                            members[keluarga][nama] -= 0.9;
-                            if (members[keluarga][nama] < 0) members[keluarga][nama] = 0;
-                        }
-                    }
-                }
-                localStorage.setItem("members", JSON.stringify(members));
-                localStorage.setItem("lastVisit", now);
-            }
-        }
-
-        function showKuotaMenu() {
-            document.querySelector('.input-container').style.display = 'none';
-            document.querySelector('.kuota-container').style.display = 'block';
-            alert("Selamat datang di menu cek kuota member! Website ini dibuat oleh Gede Arta dan Montu.");
-            reduceQuota();
-            
-            let kuotaList = document.getElementById("kuota-list");
-            kuotaList.innerHTML = "";
-
-            for (let keluarga in members) {
-                let keluargaDiv = document.createElement("div");
-                keluargaDiv.innerHTML = `<h3>${keluarga}</h3>`;
-                kuotaList.appendChild(keluargaDiv);
-                
-                for (let nama in members[keluarga]) {
-                    let kuota = members[keluarga][nama];
-                    let colorClass = getCircleColor(kuota);
-                    let memberDiv = document.createElement("div");
-                    memberDiv.classList.add("member");
-                    memberDiv.innerHTML = `
-                        <span>${nama}</span>
-                        <div class="circle ${colorClass}">${kuota} GB</div>
-                    `;
-                    kuotaList.appendChild(memberDiv);
-                }
-            }
-        }
-    </script>
 </body>
 </html>
+
